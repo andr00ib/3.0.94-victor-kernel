@@ -197,7 +197,7 @@ SUBARCH := arm
 export KBUILD_BUILDHOST := $(SUBARCH)
 ARCH		?= arm
 #CROSS_COMPILE	?= arm-eabi-
-CROSS_COMPILE	?= /home/dodgedroid/toolchains/arm-eabi-linaro-4.7.3/bin/arm-eabi-
+CROSS_COMPILE	?= /home/dodgedroid/toolchains/arm-gnueabi-linaro-4.7.4/bin/arm-gnueabi-
 
 # Architecture as present in compile.h
 UTS_MACHINE 	:= $(ARCH)
@@ -360,8 +360,8 @@ CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
 CFLAGS_MODULE   =
 AFLAGS_MODULE   =
 LDFLAGS_MODULE  =
-CFLAGS_KERNEL	=
-AFLAGS_KERNEL	=
+CFLAGS_KERNEL	= -fgcse-lm -fgcse-sm -fsched-spec-load -fforce-addr -ffast-math -fsingle-precision-constant -mtune=cortex-a9 -march=armv7-a -mfpu=neon -mvectorize-with-neon-quad -ftree-vectorize -funswitch-loops
+AFLAGS_KERNEL	= -fgcse-lm -fgcse-sm -fsched-spec-load -fforce-addr -ffast-math -fsingle-precision-constant -mtune=cortex-a9 -march=armv7-a -mfpu=neon -mvectorize-with-neon-quad -ftree-vectorize -funswitch-loops
 CFLAGS_GCOV	= -fprofile-arcs -ftest-coverage
 
 
@@ -377,7 +377,13 @@ KBUILD_CPPFLAGS := -D__KERNEL__
 KBUILD_CFLAGS   := -Wstrict-prototypes -Wno-trigraphs \
 		   -fno-strict-aliasing -fno-common \
 		   -Wno-format-security \
-		   -fno-delete-null-pointer-checks
+		   -fno-delete-null-pointer-checks -mno-unaligned-access \
+                   -marm -mcpu=cortex-a9 -mtune=cortex-a9 -mfpu=neon \
+                   -fsingle-precision-constant -fpredictive-commoning -fipa-cp-clone \
+                   -fmodulo-sched -fmodulo-sched-allow-regmoves \
+                   -funsafe-math-optimizations -fgcse-after-reload -ftree-vectorize -pipe \
+                   -funswitch-loops -fpredictive-commoning -floop-interchange \
+                   -floop-strip-mine -floop-block
 KBUILD_AFLAGS_KERNEL :=
 KBUILD_CFLAGS_KERNEL :=
 KBUILD_AFLAGS   := -D__ASSEMBLY__
